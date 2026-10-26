@@ -13,6 +13,14 @@ dataset:
   films_csv: films.csv              
   annotations_csv: gt_annotations.csv
   gt_mode: raw                      # raw = semua GT; curated = hanya include == yes
+  min_gt_per_film: 3      # film dengan GT lolos kurasi < ini dikeluarkan
+  
+scraping:
+  user_agent: "plothole-eval/0.1 (riset tugas akhir)"
+  delay_seconds: 2          # jeda antar-request
+  timeout_seconds: 30
+  max_retries: 3
+  wayback_target: "20240101"   # cari snapshot terdekat ke tanggal ini
 
 experiment:
   name: main_grid
