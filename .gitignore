@@ -1,0 +1,19 @@
+# Rahasia
+.env
+
+# Environment & cache Python
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+
+# Data berhak cipta: TIDAK PERNAH di-commit
+data/raw/*
+data/processed/*
+data/outputs/*
+!data/**/.gitkeep
+
+# File kerja & lock Office
+~$*
+*.xlsx
+.ipynb_checkpoints/

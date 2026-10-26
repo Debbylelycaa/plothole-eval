@@ -1,0 +1,24 @@
+# Konfigurasi utama eksperimen.
+# Kode TIDAK boleh menyimpan parameter sendiri; semua dibaca dari sini.
+
+paths:            
+  manifest: data/manifest
+  raw: data/raw
+  processed: data/processed
+  outputs: data/outputs
+  results: results
+  prompts: prompts
+
+dataset:
+  films_csv: films.csv              
+  annotations_csv: gt_annotations.csv
+  gt_mode: raw                      # raw = semua GT; curated = hanya include == yes
+
+experiment:
+  name: main_grid
+  strategies: [zero_shot, cot, chunking]
+  repeats: 1
+  temperature: 0.0
+  seed: 42
+
+models: []                          

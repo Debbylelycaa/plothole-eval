@@ -1,0 +1,1 @@
+"""Framework evaluasi LLM untuk deteksi plot hole pada naskah film."""
