@@ -9,13 +9,12 @@ from dotenv import load_dotenv
 from plothole.annotations import EXCLUDE_CODES, cohen_kappa, full_label, load_annotations
 from plothole.config import DEFAULT_CONFIG, PROJECT_ROOT, load_config
 from plothole.gt import load_gt_raw
+from plothole.inference.runner import run_grid
 from plothole.manifest import films_csv_path, load_films
 from plothole.preprocessing.pipeline import preprocess_film
 from plothole.scraping.checksums import update_checksums
 from plothole.scraping.pipeline import scrape_film
 from plothole.scraping.wayback import find_snapshot, raw_snapshot_url
-
-API_KEYS = ["OPENAI_API_KEY", "GEMINI_API_KEY", "GROQ_API_KEY"]  # disesuaikan di Fase 4
 
 
 def cmd_info(cfg: dict) -> None:
@@ -23,6 +22,8 @@ def cmd_info(cfg: dict) -> None:
     exp = cfg["experiment"]
     print(f"Eksperimen : {exp['name']}")
     print(f"Strategi   : {', '.join(exp['strategies'])}")
+    print(f"Repeats    : {exp['repeats']}")
+    print(f"Model      : {', '.join(m['name'] + ' (' + m['model_id'] + ')' for m in cfg['models'])}")
     print(f"Mode GT    : {cfg['dataset']['gt_mode']}")
 
     print("\nFolder:")
@@ -32,7 +33,7 @@ def cmd_info(cfg: dict) -> None:
 
     load_dotenv(PROJECT_ROOT / ".env")
     print("\nAPI key (.env):")
-    for key in API_KEYS:
+    for key in [m["api_key_env"] for m in cfg["models"]]:
         print(f"  [{'ada' if os.getenv(key) else 'kosong':^6}] {key}")
 
 
@@ -147,6 +148,24 @@ def cmd_agreement(cfg: dict) -> None:
     print(f"Disimpan di {out}")
 
 
+def cmd_run(cfg: dict, args) -> None:
+    """Menjalankan inferensi. --dry-run hanya menghitung panggilan dan estimasi biaya."""
+    planned = run_grid(cfg, models=args.models, strategies=args.strategies,
+                       films=args.films, dry_run=args.dry_run)
+    if args.dry_run:
+        if not planned:
+            print("Tidak ada panggilan yang perlu dijalankan (semua sudah selesai).")
+            return
+        df = pd.DataFrame(planned)
+        summary = df.groupby(["model", "strategy"])[
+            ["calls", "est_input_tokens", "est_input_cost_usd"]].sum()
+        print(summary.to_string())
+        print(f"\nTotal: {df['calls'].sum()} panggilan, "
+              f"~{df['est_input_tokens'].sum():,} token input, "
+              f"~${df['est_input_cost_usd'].sum():.2f} biaya input.")
+        print("Biaya output belum termasuk (biasanya menambah 20-60%, tergantung panjang jawaban).")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="plothole")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
@@ -157,6 +176,12 @@ def main() -> None:
     sub.add_parser("preprocess", help="cleaning + segmentasi + statistik dataset")
     sub.add_parser("gt-stats", help="rekap hasil kurasi GT per film")
     sub.add_parser("agreement", help="cohen's kappa putaran 1 vs 2")
+
+    p_run = sub.add_parser("run", help="jalankan inferensi (grid model x strategi x film x run)")
+    p_run.add_argument("--models", nargs="+", help="mis. --models deepseek gemini (default: semua)")
+    p_run.add_argument("--strategies", nargs="+", help="mis. --strategies zero_shot (default: semua)")
+    p_run.add_argument("--films", nargs="+", help="mis. --films the_village (default: semua)")
+    p_run.add_argument("--dry-run", action="store_true", help="hitung panggilan & estimasi biaya saja")
 
     args = parser.parse_args()
     cfg = load_config(args.config)
@@ -173,6 +198,8 @@ def main() -> None:
         cmd_gt_stats(cfg)
     elif args.command == "agreement":
         cmd_agreement(cfg)
+    elif args.command == "run":
+        cmd_run(cfg, args)
 
 
 if __name__ == "__main__":

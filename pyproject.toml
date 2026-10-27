@@ -17,6 +17,7 @@ dependencies = [
     "lxml>=5.0",
     "tiktoken>=0.7",
     "streamlit>=1.35",
+    "openai>=1.40",
 ]
 
 [project.optional-dependencies]

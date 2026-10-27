@@ -33,8 +33,36 @@ preprocessing:
 experiment:
   name: main_grid
   strategies: [zero_shot, cot, chunking]
-  repeats: 1
-  temperature: 0.0
-  seed: 42
+  repeats: 3                
+  # temperature tidak dipakai: reasoning model mengabaikan/menolaknya.
+  # Reasoning internal = level terendah yang didukung tiap model
 
-models: []                          
+models:
+  - name: gemini
+    model_id: gemini-4-argon
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+    api_key_env: GEMINI_API_KEY
+    # Output sudah termasuk thinking tokens.
+    price_per_mtok: {input: 2.00, output: 10.00}
+    params:
+      reasoning_effort: low          # terendah; Gemini 4 tidak bisa mematikan reasoning
+      max_tokens: 16000
+
+  - name: gpt
+    model_id: gpt-6.1-sol            
+    base_url: null                  
+    api_key_env: OPENAI_API_KEY
+    price_per_mtok: {input: 2.00, output: 10.00}
+    params:
+      reasoning_effort: low     
+      max_completion_tokens: 16000
+
+  - name: deepseek
+    model_id: deepseek-flash
+    base_url: https://api.deepseek.com
+    api_key_env: DEEPSEEK_API_KEY
+    price_per_mtok: {input: 0.30, output: 1.20}
+    params:
+      max_tokens: 8000
+      extra_body:
+        thinking: {type: disabled}
