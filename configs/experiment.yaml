@@ -22,6 +22,14 @@ scraping:
   max_retries: 3
   wayback_target: "20240101"   # cari snapshot terdekat ke tanggal ini
 
+preprocessing:
+  tokenizer: o200k_base            # tokenizer referensi untuk estimasi
+  restore_lines_if_avg_line_over: 500   
+  restore_lines_space_gap: 4       
+  min_scene_headings: 30         
+  block_target_tokens: 600         
+  acts: [0.25, 0.50, 0.25]         
+
 experiment:
   name: main_grid
   strategies: [zero_shot, cot, chunking]
