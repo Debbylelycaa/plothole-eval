@@ -1,0 +1,5 @@
+Below is the full screenplay, divided into {n_units} numbered units.
+Identify all plot holes in it.
+
+SCREENPLAY
+{screenplay}

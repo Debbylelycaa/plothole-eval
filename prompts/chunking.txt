@@ -1,0 +1,6 @@
+Below is part {part} of {n_parts} of a screenplay, containing {n_units} numbered units.
+Unit numbers refer to the full screenplay.
+Identify all plot holes you can find within this part only.
+
+SCREENPLAY (PART {part} OF {n_parts})
+{screenplay}
