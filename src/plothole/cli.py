@@ -3,10 +3,12 @@ import argparse
 import os
 from pathlib import Path
 
+import pandas as pd
 from dotenv import load_dotenv
 
 from plothole.config import DEFAULT_CONFIG, PROJECT_ROOT, load_config
 from plothole.manifest import films_csv_path, load_films
+from plothole.preprocessing.pipeline import preprocess_film
 from plothole.scraping.checksums import update_checksums
 from plothole.scraping.pipeline import scrape_film
 from plothole.scraping.wayback import find_snapshot, raw_snapshot_url
@@ -68,6 +70,23 @@ def cmd_scrape(cfg: dict) -> None:
         update_checksums(results, cfg["paths"]["manifest"] / "checksums.csv")
 
 
+def cmd_preprocess(cfg: dict) -> None:
+    """Cleaning + segmentasi semua film, lalu simpan statistik dataset."""
+    rows = []
+    for film_id in load_films(cfg)["film_id"]:
+        try:
+            s = preprocess_film(film_id, cfg)
+            rows.append(s)
+            print(f"[ok]    {film_id}: {s['tokens']:,} token, {s['units']} unit ({s['segmentation']})")
+        except Exception as e:
+            print(f"[GAGAL] {film_id}: {e}")
+
+    if rows:
+        out = cfg["paths"]["results"] / "dataset_stats.csv"
+        pd.DataFrame(rows).to_csv(out, index=False)
+        print(f"\nStatistik dataset disimpan di {out}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="plothole")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
@@ -75,6 +94,7 @@ def main() -> None:
     sub.add_parser("info", help="cek konfigurasi dan setup")
     sub.add_parser("find-snapshots", help="cari snapshot Wayback untuk film yang belum punya")
     sub.add_parser("scrape", help="unduh naskah + GT semua film")
+    sub.add_parser("preprocess", help="cleaning + segmentasi + statistik dataset")
 
     args = parser.parse_args()
     cfg = load_config(args.config)
@@ -85,6 +105,8 @@ def main() -> None:
         cmd_find_snapshots(cfg)
     elif args.command == "scrape":
         cmd_scrape(cfg)
+    elif args.command == "preprocess":
+        cmd_preprocess(cfg)
 
 
 if __name__ == "__main__":
