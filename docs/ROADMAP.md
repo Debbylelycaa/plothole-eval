@@ -1,6 +1,6 @@
 - [x] Fase 0 – Setup
-- [ ] Fase 1 – Manifest & scraping
-- [ ] Fase 2 – Preprocessing
+- [x] Fase 1 – Manifest & scraping
+- [x] Fase 2 – Preprocessing
 - [ ] Fase 3 – Kurasi GT (+ halaman anotasi di UI)
 - [ ] Fase 4 – Inferensi
 - [ ] Fase 5 – Parsing & matching
