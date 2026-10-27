@@ -1,5 +1,8 @@
+import pytest
+
 from plothole.scraping.checksums import sha256_text
-from plothole.scraping.imsdb import extract_screenplay
+from plothole.scraping.fetch import fetch_cached
+from plothole.scraping.imsdb import MIN_CHARS, extract_screenplay
 from plothole.scraping.movieplotholes import parse_plot_holes
 
 MPH_HTML = """<html><body><article>
@@ -8,6 +11,8 @@ MPH_HTML = """<html><body><article>
 <p>Namun ia muncul lagi di akhir.</p>
 <p>minor plot hole: Jam di dinding berubah.</p>
 </article></body></html>"""
+
+NASKAH = "INT. RUMAH - MALAM\n" + "Dialog tokoh.\n" * (MIN_CHARS // 10)
 
 
 def test_parse_plot_holes():
@@ -19,9 +24,30 @@ def test_parse_plot_holes():
 
 
 def test_extract_screenplay_ambil_pre_terpanjang():
-    html = "<pre>pendek</pre><pre>INT. RUMAH - MALAM\nIni naskah utuh.</pre>"
+    html = f"<pre>pendek</pre><pre>{NASKAH}</pre>"
     assert extract_screenplay(html).startswith("INT. RUMAH")
+
+
+def test_extract_screenplay_tanpa_pre_pakai_scrtext():
+    html = f'<table><tr><td class="scrtext">{NASKAH}<table><tr><td>Writers: X</td></tr></table></td></tr></table>'
+    text = extract_screenplay(html)
+    assert "INT. RUMAH" in text
+    assert "Writers" not in text  # tabel info dibuang
+
+
+def test_extract_screenplay_kosong_gagal():
+    html = '<td class="scrtext"><pre></pre><table><tr><td>Writers: X</td></tr></table></td>'
+    with pytest.raises(ValueError):
+        extract_screenplay(html)
 
 
 def test_hash_deterministik():
     assert sha256_text("abc") == sha256_text("abc") != sha256_text("abd")
+
+
+def test_cache_akhir_baris_diseragamkan(tmp_path):
+    # tmp_path = folder sementara yang dibuat pytest, otomatis dihapus
+    cache = tmp_path / "halaman.html"
+    cache.write_bytes(b"baris1\r\nbaris2\rbaris3\n")
+    # cache sudah ada, jadi tidak ada download; scfg tidak dipakai
+    assert fetch_cached("http://tidak-dipakai", cache, {}) == "baris1\nbaris2\nbaris3\n"
