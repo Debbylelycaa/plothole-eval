@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 from plothole.annotations import EXCLUDE_CODES, cohen_kappa, full_label, load_annotations
 from plothole.config import DEFAULT_CONFIG, PROJECT_ROOT, load_config
+from plothole.evaluation.collect import collect_predictions, summarize
 from plothole.gt import load_gt_raw
 from plothole.inference.runner import run_grid
 from plothole.manifest import films_csv_path, load_films
@@ -166,6 +167,23 @@ def cmd_run(cfg: dict, args) -> None:
         print("Biaya output belum termasuk (biasanya menambah 20-60%, tergantung panjang jawaban).")
 
 
+def cmd_parse(cfg: dict, args) -> None:
+    """Parsing semua output + verifikasi kutipan. Prediksi lengkap disimpan lokal."""
+    predictions, calls = collect_predictions(cfg, films=args.films)
+    if not calls:
+        print("Belum ada output berstatus ok.")
+        return
+
+    exp_dir = cfg["paths"]["outputs"] / cfg["experiment"]["name"]
+    pd.DataFrame(predictions).to_csv(exp_dir / "predictions.csv", index=False)  # lokal: berisi kutipan
+
+    summary = summarize(predictions, calls)
+    print(summary.to_string(index=False))
+    out = cfg["paths"]["results"] / "parse_stats.csv"                          # di-commit: angka saja
+    summary.to_csv(out, index=False)
+    print(f"\n{len(calls)} output, {len(predictions)} prediksi. Statistik disimpan di {out}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="plothole")
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
@@ -182,6 +200,9 @@ def main() -> None:
     p_run.add_argument("--strategies", nargs="+", help="mis. --strategies zero_shot (default: semua)")
     p_run.add_argument("--films", nargs="+", help="mis. --films the_village (default: semua)")
     p_run.add_argument("--dry-run", action="store_true", help="hitung panggilan & estimasi biaya saja")
+
+    p_parse = sub.add_parser("parse", help="parsing output model + verifikasi kutipan bukti")
+    p_parse.add_argument("--films", nargs="+", help="mis. --films the_village (default: semua)")
 
     args = parser.parse_args()
     cfg = load_config(args.config)
@@ -200,6 +221,8 @@ def main() -> None:
         cmd_agreement(cfg)
     elif args.command == "run":
         cmd_run(cfg, args)
+    elif args.command == "parse":
+        cmd_parse(cfg, args)
 
 
 if __name__ == "__main__":

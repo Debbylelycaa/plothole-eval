@@ -1,0 +1,10 @@
+model,strategy,calls,format_clean,format_extracted,format_broken,truncated,analysis_rate,predictions,quote_exact
+deepseek,chunking,3,0.333,0.667,0.0,0.0,0.0,6,1.0
+deepseek,cot,1,1.0,0.0,0.0,0.0,1.0,2,1.0
+deepseek,zero_shot,1,1.0,0.0,0.0,0.0,0.0,0,
+gemini,chunking,3,1.0,0.0,0.0,0.0,0.0,4,1.0
+gemini,cot,1,1.0,0.0,0.0,0.0,1.0,1,1.0
+gemini,zero_shot,1,1.0,0.0,0.0,0.0,0.0,2,1.0
+gpt,chunking,3,1.0,0.0,0.0,0.0,0.0,0,
+gpt,cot,1,1.0,0.0,0.0,0.0,0.0,1,1.0
+gpt,zero_shot,1,1.0,0.0,0.0,0.0,0.0,1,1.0
