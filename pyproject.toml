@@ -19,6 +19,8 @@ dependencies = [
     "streamlit>=1.35",
     "openai>=1.40",
     "rapidfuzz>=3.0",
+    "sentence-transformers>=3.0",
+    "scipy>=1.11",
 ]
 
 [project.optional-dependencies]

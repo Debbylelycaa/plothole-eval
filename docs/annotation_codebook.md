@@ -57,3 +57,18 @@ tanpa melihat hasil putaran pertama. Kesepakatan dihitung dengan Cohen's kappa
 untuk (a) keputusan include dan (b) label lengkap (tipe atau kode eksklusi).
 Ketidaksepakatan diselesaikan dengan merujuk codebook ini; hasil putaran 1
 yang sudah direvisi menjadi label final.
+
+## Penilaian kesamaan (kalibrasi matching)
+
+Untuk setiap pasangan (prediksi model, entri GT), jawab: **apakah keduanya membahas
+plot hole yang sama?**
+
+- **yes**: keduanya menunjuk inkonsistensi inti yang sama (fakta, aturan, atau peristiwa
+  yang sama yang saling bertentangan), walaupun ditulis dengan kata berbeda atau tingkat
+  detail berbeda.
+- **yes**: entri GT membahas beberapa masalah, dan prediksi tepat menunjuk salah satunya.
+- **no**: keduanya hanya menyebut tokoh, adegan, atau tema yang sama, tetapi
+  inkonsistensi yang dibahas berbeda.
+- **no**: prediksi terlalu umum sehingga tidak jelas inkonsistensi mana yang dimaksud.
+
+Penilaian dilakukan tanpa melihat skor kemiripan maupun nama model.
