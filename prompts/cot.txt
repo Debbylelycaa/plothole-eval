@@ -1,12 +1,20 @@
 Below is the full screenplay, divided into {n_units} numbered units.
 Identify all plot holes in it.
 
-Think step by step before giving your list. Add a field "analysis" as the FIRST field of the JSON object and write your reasoning there:
-1. Summarize the main plot and its key events in order.
-2. List the important facts, rules, and character goals the story establishes, with their unit numbers.
-3. Check each later event against those facts, rules, and goals.
-4. Keep only genuine plot holes according to the definition; discard the rest.
-Then give the final "plot_holes" list in the required format.
+Think step by step before giving your list. Your JSON object MUST contain exactly two fields, in this order:
+
+1. "analysis": your step-by-step reasoning as plain text, covering:
+   Step 1. Summarize the main plot and its key events in order.
+   Step 2. List the important facts, rules, and character goals the story establishes, with their unit numbers.
+   Step 3. Check each later event against those facts, rules, and goals.
+   Step 4. Decide which inconsistencies are genuine plot holes according to the definition.
+2. "plot_holes": the final list, in the format defined in the system instructions.
+
+Required shape (the "analysis" field is mandatory and must come first):
+{
+  "analysis": "Step 1: ... Step 2: ... Step 3: ... Step 4: ...",
+  "plot_holes": [ ... ]
+}
 
 SCREENPLAY
 {screenplay}
