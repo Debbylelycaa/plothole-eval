@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 
 PATTERN = re.compile(
-    r"^(Major Plot Hole|Minor Plot Hole|Super Plot Hole|Unaddressed Issue)\s*:\s*(.*)",
+    r"^(Major Plot Hole|Minor Plot Hole|Super Plot Hole|Unaddressed Issue|Plot Contrivance)\s*:\s*(.*)",
     re.IGNORECASE,
 )
 

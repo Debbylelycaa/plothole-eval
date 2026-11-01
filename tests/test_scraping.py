@@ -51,3 +51,13 @@ def test_cache_akhir_baris_diseragamkan(tmp_path):
     cache.write_bytes(b"baris1\r\nbaris2\rbaris3\n")
     # cache sudah ada, jadi tidak ada download; scfg tidak dipakai
     assert fetch_cached("http://tidak-dipakai", cache, {}) == "baris1\nbaris2\nbaris3\n"
+    
+def test_plot_contrivance_jadi_entri_sendiri():
+    html = """<article>
+    <p>Super Plot Hole: Tongkat ular bisa mengendalikan orang.</p>
+    <p>Plot contrivance: Jasmine lama sekali mengenali Aladdin.</p>
+    </article>"""
+    entries = parse_plot_holes(html, "film_x")
+    assert len(entries) == 2
+    assert entries[1]["category"] == "Plot Contrivance"
+    assert "Jasmine" not in entries[0]["description"]
