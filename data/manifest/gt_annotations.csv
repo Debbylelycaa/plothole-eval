@@ -1,0 +1,7 @@
+gt_id,film_id,desc_sha256,include,exclude_code,ph_type,setup_unit,violation_unit,notes,annotated_at
+armageddon_gt01,armageddon,9b37f55722db2383a249909643db16a249a5b743eed0c3095bbbda8acd362178,no,E1,,,,"Kritik valid secara sains (ukuran pecahan asteroid), tapi tidak ada fakta dalam cerita yang bertentangan.",2026-11-01T17:33:35
+armageddon_gt02,armageddon,81b0ee9c0b3ac765151736ca4a50e0acaaec2c37b27402015cdc83e679d3e2ad,no,E1,,,,,2026-11-01T17:39:19
+armageddon_gt03,armageddon,866c816028bdf2a5aafcb2eb91d6219ffca584984d5dc605573f7a594df17e93,no,E4,,,,,2026-11-01T17:39:44
+armageddon_gt04,armageddon,3c17dab35819857e7aaf9628bf9c97dece19c07abda134e107ca61865983b787,no,E3,,,,,2026-11-01T18:06:29
+armageddon_gt05,armageddon,924595ca657d8b6b586dd73b54bb437c094332d65476d20d6218a75bd40c4601,no,E4,,,,,2026-11-01T17:41:04
+armageddon_gt06,armageddon,fdc6060bfbea53405252398f91772aff3e0502f9398104a848e1c0bcedabc5bb,no,E3,,,,,2026-11-01T18:06:17
