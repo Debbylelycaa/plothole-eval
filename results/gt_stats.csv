@@ -1,0 +1,13 @@
+film_id,gt_raw,annotated,included,E1,E2,E3,E4,E5,E6,meets_min_gt
+armageddon,6,6,0,2,0,2,2,0,0,False
+gravity,4,0,0,0,0,0,0,0,0,False
+sherlock_holmes,5,0,0,0,0,0,0,0,0,False
+saw,8,0,0,0,0,0,0,0,0,False
+collateral,8,0,0,0,0,0,0,0,0,False
+aladdin,7,0,0,0,0,0,0,0,0,False
+beauty_and_the_beast,5,0,0,0,0,0,0,0,0,False
+the_village,9,0,0,0,0,0,0,0,0,False
+the_usual_suspects,4,0,0,0,0,0,0,0,0,False
+training_day,5,0,0,0,0,0,0,0,0,False
+die_hard,8,0,0,0,0,0,0,0,0,False
+black_panther,8,0,0,0,0,0,0,0,0,False
